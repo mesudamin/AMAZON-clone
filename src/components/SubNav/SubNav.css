@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Sub-Navigation Bar (#232f3e) Styling
+   ========================================================================== */
+
+.header__subnav {
+  display: flex;
+  align-items: center;
+  background-color: #232f3e;
+  padding: 0 10px;
+  height: 36px;
+  font-size: 13px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 2px;
+}
+
+.header__subnav::-webkit-scrollbar {
+  display: none;
+}
+
+.header__menuButton {
+  background: transparent;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 4px 7px;
+  cursor: pointer;
+  color: #ffffff;
+  border-radius: 2px;
+  transition: border-color 0.15s ease;
+}
+
+.header__menuButton:hover {
+  border-color: #ffffff;
+}
+
+.header__menuIcon {
+  width: 15px;
+  height: 13px;
+  display: block;
+}
+
+.header__subnavLinks {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.header__subnavLink {
+  padding: 4px 7px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+  transition: border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.header__subnavLink:hover {
+  border-color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Rules
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .header__subnav {
+    height: 34px;
+    padding: 0 6px;
+    background-color: #232f3e;
+  }
+
+  /* Hamburger is displayed in main bar on mobile */
+  .header__menuButton {
+    display: none;
+  }
+
+  .header__subnavLinks {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 1px;
+    width: 100%;
+  }
+
+  .header__subnavLink {
+    padding: 4px 6px;
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 420px) {
+  .header__subnavLink {
+    padding: 4px 5px;
+    font-size: 12px;
+  }
+}

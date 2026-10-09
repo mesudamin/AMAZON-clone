@@ -1,0 +1,148 @@
+/* ==========================================================================
+   Side Menu Drawer ("All" Hamburger Menu) Styling
+   ========================================================================== */
+
+.header__sideOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  display: flex;
+}
+
+.header__sideDrawer {
+  width: 365px;
+  max-width: 85vw;
+  height: 100vh;
+  background-color: #ffffff;
+  color: #111111;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: slideDrawer 0.25s ease-out;
+}
+
+@keyframes slideDrawer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.header__sideDrawer * {
+  box-sizing: border-box;
+}
+
+.header__sideHeader {
+  display: flex;
+  align-items: center;
+  background-color: #232f3e;
+  color: #ffffff;
+  padding: 14px 24px;
+  gap: 12px;
+}
+
+.header__sideUserAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header__sideTitle {
+  font-size: 19px;
+  font-weight: 700;
+  flex: 1;
+  color: #ffffff;
+}
+
+.header__sideCloseInside {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.header__sideCloseOutside {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 36px;
+  padding: 12px 18px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: opacity 0.15s ease;
+}
+
+.header__sideCloseOutside:hover {
+  opacity: 0.8;
+}
+
+.header__sideContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 0 30px;
+}
+
+.header__sideSection {
+  padding: 6px 0;
+}
+
+.header__sideSectionTitle {
+  padding: 10px 24px 6px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.header__sideItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 24px;
+  font-size: 14px;
+  color: #111111;
+  text-decoration: none;
+  transition: background-color 0.1s ease;
+}
+
+.header__sideItem:hover {
+  background-color: #eaeded;
+}
+
+.header__sideArrow {
+  font-size: 20px;
+  color: #666666;
+  line-height: 1;
+}
+
+.header__sideDivider {
+  height: 1px;
+  background-color: #d5d9d9;
+  margin: 10px 0;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Rules
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .header__sideDrawer {
+    width: 300px;
+    max-width: 82vw;
+  }
+
+  .header__sideCloseInside {
+    display: block;
+  }
+
+  .header__sideCloseOutside {
+    display: none;
+  }
+}

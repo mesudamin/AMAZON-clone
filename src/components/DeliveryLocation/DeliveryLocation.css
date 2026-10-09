@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Delivery Location & Mobile Location Strip Styling
+   ========================================================================== */
+
+/* Desktop Delivery Location */
+.header__delivery {
+  display: flex;
+  align-items: center;
+  padding: 3px 6px;
+  margin-right: 2px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #ffffff;
+  transition: border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.header__delivery:hover {
+  border-color: #ffffff;
+}
+
+.header__deliveryContainer,
+.header__deliveryText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header__locationIconWrapper {
+  display: flex;
+  align-items: flex-end;
+  height: 20px;
+  margin-right: 2px;
+}
+
+.header__deliveryLineOne {
+  font-size: 11px;
+  color: #cccccc;
+  line-height: 12px;
+  font-weight: 400;
+  margin-left: 15px;
+}
+
+.header__deliveryLineTwoWrapper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  line-height: 14px;
+}
+
+.header__locationIcon {
+  width: 14px;
+  height: 16px;
+  display: block;
+}
+
+.header__deliveryLineTwo {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 14px;
+}
+
+/* Mobile Delivery Location Strip */
+.header__mobileLocationStrip {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Rules
+   -------------------------------------------------------------------------- */
+@media (max-width: 920px) {
+  .header__delivery {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header__delivery {
+    display: none;
+  }
+
+  /* Full-width delivery banner below main header */
+  .header__mobileLocationStrip {
+    display: flex;
+    align-items: center;
+    background-color: #232f3e;
+    height: 34px;
+    padding: 0 12px;
+    gap: 6px;
+    font-size: 12px;
+    color: #ffffff;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .header__mobileLocationIcon {
+    width: 13px;
+    height: 15px;
+    display: block;
+  }
+
+  .header__mobileLocationText {
+    flex: 1;
+    font-weight: 500;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 420px) {
+  .header__mobileLocationStrip {
+    font-size: 11.5px;
+    padding: 0 8px;
+  }
+}

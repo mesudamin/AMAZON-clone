@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Language Selector Styling & Flyout
+   ========================================================================== */
+
+.header__language {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 6px;
+  position: relative;
+  cursor: pointer;
+}
+
+.header__flag {
+  width: 20px;
+  height: 13px;
+  object-fit: cover;
+  border-radius: 1px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+  display: block;
+}
+
+.header__langCode {
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  line-height: 14px;
+}
+
+.header__langDropdown {
+  right: 0;
+  width: 240px;
+  padding: 14px 16px;
+}
+
+.header__langDropdown .header__dropdownArrow {
+  right: 32px;
+}
+
+.header__langHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #111111;
+}
+
+.header__langOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header__langOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #333333;
+  cursor: pointer;
+}
+
+.header__langOption input[type="radio"] {
+  accent-color: #e47911;
+  cursor: pointer;
+  margin: 0;
+}
+
+.header__currencySection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header__currencyLabel {
+  font-size: 12px;
+  color: #555555;
+}
+
+.header__currencyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+}
+
+.header__countrySection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #333333;
+}
+
+.header__flagSmall {
+  width: 16px;
+  height: 11px;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Rules
+   -------------------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .header__language {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header__language {
+    display: none;
+  }
+}

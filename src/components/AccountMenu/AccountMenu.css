@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Account & Lists Flyout Dropdown Styling
+   ========================================================================== */
+
+.header__accountDropdown {
+  right: 0;
+  width: 480px;
+  padding: 18px 20px;
+}
+
+.header__accountDropdown .header__dropdownArrow {
+  right: 60px;
+}
+
+.header__accountPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.header__accountSignInBtn {
+  width: 200px;
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  color: #0f1111;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 7px 0;
+  transition: background 0.15s ease;
+}
+
+.header__accountSignInBtn:hover {
+  background: #f7ca00;
+}
+
+.header__accountNewCustomer {
+  font-size: 11px;
+  color: #333333;
+}
+
+.header__accountColumns {
+  display: flex;
+  gap: 20px;
+}
+
+.header__accountColumn {
+  flex: 1;
+}
+
+.header__accountColumnDivider {
+  width: 1px;
+  background-color: #e7e7e7;
+}
+
+.header__accountColTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 10px;
+}
+
+.header__accountList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.header__accountList a {
+  font-size: 13px;
+  color: #444444;
+  text-decoration: none;
+  transition: color 0.1s ease;
+  display: inline-block;
+}
+
+.header__accountList a:hover {
+  color: #c7511f;
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Rules
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .header__accountDropdown {
+    display: none !important;
+  }
+}

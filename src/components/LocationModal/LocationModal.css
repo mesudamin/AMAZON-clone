@@ -1,0 +1,195 @@
+/* ==========================================================================
+   Choose Your Location Modal Styling
+   ========================================================================== */
+
+.header__modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.header__modalCard {
+  width: 375px;
+  max-width: 95vw;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  color: #0f1111;
+}
+
+.header__modalCard * {
+  box-sizing: border-box;
+}
+
+.header__modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background-color: #f0f2f2;
+  border-bottom: 1px solid #d5d9d9;
+}
+
+.header__modalHeader h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: #0f1111;
+}
+
+.header__modalClose {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #555555;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.header__modalClose:hover {
+  color: #111111;
+}
+
+.header__modalBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.header__modalDesc {
+  font-size: 12px;
+  color: #555555;
+  line-height: 16px;
+  margin: 0;
+}
+
+.header__modalSignInBtn {
+  width: 100%;
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 8px;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f1111;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.header__modalSignInBtn:hover {
+  background: #f7ca00;
+}
+
+.header__modalOrDivider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  color: #767676;
+}
+
+.header__modalOrDivider::before,
+.header__modalOrDivider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.header__modalOrDivider span {
+  padding: 0 10px;
+  color: #767676;
+}
+
+.header__modalZipRow {
+  display: flex;
+  gap: 8px;
+}
+
+.header__modalZipInput {
+  flex: 1;
+  border: 1px solid #888c8c;
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 14px;
+  color: #0f1111;
+  outline: none;
+}
+
+.header__modalZipInput:focus {
+  border-color: #e77600;
+  box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5);
+}
+
+.header__modalApplyBtn {
+  background-color: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f1111;
+  cursor: pointer;
+}
+
+.header__modalApplyBtn:hover {
+  background-color: #f7fafa;
+}
+
+.header__modalCountryRow {
+  display: flex;
+}
+
+.header__modalCountrySelect {
+  width: 100%;
+  border: 1px solid #d5d9d9;
+  background-color: #f0f2f2;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #0f1111;
+  cursor: pointer;
+  outline: none;
+}
+
+.header__modalCountrySelect:hover {
+  background-color: #e3e6e6;
+}
+
+.header__modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  border-top: 1px solid #e7e7e7;
+}
+
+.header__modalDoneBtn {
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 8px;
+  padding: 7px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f1111;
+  cursor: pointer;
+}
+
+.header__modalDoneBtn:hover {
+  background: #f7ca00;
+}
+
+@media (max-width: 768px) {
+  .header__modalCard {
+    width: 95vw;
+    border-radius: 8px;
+  }
+}
