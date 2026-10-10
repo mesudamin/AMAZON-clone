@@ -1,0 +1,311 @@
+/* ==========================================================================
+   Amazon Product Grid & ProductCard Styling (Compact & Minimized)
+   ========================================================================== */
+
+/* Product Section Container - Aligned with Category Container */
+.product__container {
+  max-width: 1480px;
+  margin: 10px auto 50px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Products Responsive Grid - Denser, Minimized Card Grid */
+.product__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+/* Individual Minimized Product Card */
+.productCard {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 14px 14px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  z-index: 5;
+  min-height: 310px;
+}
+
+.productCard:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Compact Image Wrapper */
+.productCard__imageContainer {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+}
+
+/* Compact Product Image */
+.productCard__image {
+  max-width: 100%;
+  max-height: 140px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.productCard:hover .productCard__image {
+  transform: scale(1.04);
+}
+
+/* Product Info Section */
+.productCard__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+/* Minimized Product Title (2-line clamp) */
+.productCard__title {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #0f1111;
+  margin: 0 0 6px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 34px;
+}
+
+/* Rating Stars & Count */
+.productCard__rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.productCard__stars {
+  display: inline-flex;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.productCard__starFilled {
+  color: #ffa41c;
+}
+
+.productCard__starEmpty {
+  color: #e3e6e6;
+}
+
+.productCard__ratingCount {
+  font-size: 11px;
+  color: #007185;
+  font-weight: 500;
+}
+
+/* Compact Price Row */
+.productCard__priceRow {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.productCard__priceSymbol {
+  font-size: 11px;
+  font-weight: 500;
+  color: #0f1111;
+  vertical-align: super;
+  margin-right: 2px;
+}
+
+.productCard__priceAmount {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+/* Amazon Add to Cart Yellow Button - Compact */
+.productCard__button {
+  width: 100%;
+  background-color: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #0f1111;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(213, 217, 217, 0.5);
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  margin-top: auto;
+}
+
+.productCard__button:hover {
+  background-color: #f7ca00;
+  border-color: #f2c200;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.8);
+}
+
+.productCard__button:active {
+  background-color: #f0b800;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Loading & Error States
+   ========================================================================== */
+
+.product__loadingContainer,
+.product__errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.product__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #ff9900;
+  border-radius: 50%;
+  animation: productSpin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes productSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.product__loadingText {
+  font-size: 13px;
+  color: #565959;
+}
+
+.product__errorText {
+  font-size: 13px;
+  color: #c40000;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints - Synced with Categories Breakpoints
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .product__container {
+    padding: 0 16px;
+  }
+
+  .product__grid {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+  }
+
+  .productCard {
+    padding: 12px 10px;
+    min-height: 290px;
+  }
+
+  .productCard__imageContainer {
+    height: 135px;
+  }
+
+  .productCard__image {
+    max-height: 125px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product__container {
+    padding: 0 12px;
+  }
+
+  .product__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .productCard {
+    padding: 12px 10px;
+    min-height: 280px;
+  }
+
+  .productCard__imageContainer {
+    height: 130px;
+  }
+
+  .productCard__image {
+    max-height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product__container {
+    padding: 0 12px;
+  }
+
+  .product__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .productCard {
+    padding: 10px 8px;
+    min-height: 260px;
+  }
+
+  .productCard__imageContainer {
+    height: 110px;
+  }
+
+  .productCard__image {
+    max-height: 100px;
+  }
+
+  .productCard__title {
+    font-size: 12px;
+    min-height: 30px;
+  }
+
+  .productCard__priceAmount {
+    font-size: 15px;
+  }
+
+  .productCard__button {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+}
+
+@media (hover: none) {
+  .productCard:hover {
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .productCard:hover .productCard__image {
+    transform: none;
+  }
+}
