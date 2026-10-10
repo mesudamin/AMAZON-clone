@@ -1,9 +1,4 @@
 
-
-
-
-
-
 export const images = [
     {
         "id": 9,

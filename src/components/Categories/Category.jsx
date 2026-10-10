@@ -1,4 +1,4 @@
-import { images } from '../../assets/CategoriesImg/Categories'
+import { images } from '../../assets/categoriesImg/Categories.js'
 import CategoryCard from './CategoryCard'
 import './Category.css'
 
