@@ -11,9 +11,9 @@ import SideMenu from '../SideMenu/SideMenu'
 import LocationModal from '../LocationModal/LocationModal'
 
 // Icons & Logo
-import amazonLogo from '../../assets/icon/logo1.png'
-import cartIcon from '../../assets/icon/cart.svg'
-import menuIcon from '../../assets/icon/menu.svg'
+import amazonLogo from '../../../assets/icon/logo1.png'
+import cartIcon from '../../../assets/icon/cart.svg'
+import menuIcon from '../../../assets/icon/menu.svg'
 
 /**
  * Main Amazon Header Component

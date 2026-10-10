@@ -1,4 +1,4 @@
-import Header from './components/Header/Header'
+import Header from './components/headercomponents/Header/Header'
 import CarouselEffect from './components/Carousel/CarouselEffect'
 import './App.css'
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './SearchBar.css'
-import searchIcon from '../../assets/icon/search.svg'
+import searchIcon from '../../../assets/icon/search.svg'
 
 /**
  * Authentic Amazon Search Bar Component

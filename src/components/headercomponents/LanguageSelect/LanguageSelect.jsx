@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './LanguageSelect.css'
-import flagIcon from '../../assets/icon/us_flag.svg'
+import flagIcon from '../../../assets/icon/us_flag.svg'
 
 /**
  * Language Selector with Hover/Focus Flyout Menu

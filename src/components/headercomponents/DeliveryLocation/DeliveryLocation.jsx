@@ -1,5 +1,5 @@
 import './DeliveryLocation.css'
-import locationIcon from '../../assets/icon/location.svg'
+import locationIcon from '../../../assets/icon/location.svg'
 
 /**
  * Mobile Delivery Location Strip

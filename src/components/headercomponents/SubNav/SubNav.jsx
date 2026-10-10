@@ -1,5 +1,5 @@
 import './SubNav.css'
-import menuIcon from '../../assets/icon/menu.svg'
+import menuIcon from '../../../assets/icon/menu.svg'
 
 /**
  * Sub Navigation Bar Component
