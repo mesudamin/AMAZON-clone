@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useData } from '../../utility/DataContext'
 import { Type } from '../../utility/action.type'
+import Loader from '../Loader/Loader'
 import './Product.css'
 
 /**
@@ -9,11 +10,20 @@ import './Product.css'
  * Displays an individual product with image, title, rating, price, and Add to Cart button
  * Connects directly to global Cart state
  */
-function ProductCard({ product, data }) {
-  const item = product || data || {}
-  const { id, title, image, price, rating } = item
+function ProductCard({ product, data, loading = false, isLoading = false }) {
   const [, dispatch] = useData()
   const [isAdded, setIsAdded] = useState(false)
+
+  if (loading || isLoading) {
+    return (
+      <div className="productCard productCard--loading">
+        <Loader size={30} text="" />
+      </div>
+    )
+  }
+
+  const item = product || data || {}
+  const { id, title, image, price, rating } = item
 
   const rate = Math.round(rating?.rate || 0)
   const count = rating?.count || 0

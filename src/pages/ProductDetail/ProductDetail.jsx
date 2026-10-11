@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useData } from '../../utility/DataContext'
 import { Type } from '../../utility/action.type'
+import Loader from '../../components/Loader/Loader'
 import './ProductDetail.css'
 
 /**
@@ -91,8 +92,7 @@ function ProductDetail() {
   if (loading) {
     return (
       <div className="productDetail productDetail--loading">
-        <div className="productDetail__spinner"></div>
-        <p>Loading product details...</p>
+        <Loader text="Loading product details..." />
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import ProductCard from './ProductCard'
+import Loader from '../Loader/Loader'
 import './Product.css'
 
 /**
@@ -42,10 +43,7 @@ function Product() {
   if (isLoading) {
     return (
       <section className="product__container" aria-label="Products Loading">
-        <div className="product__loadingContainer">
-          <div className="product__spinner"></div>
-          <p className="product__loadingText">Loading products...</p>
-        </div>
+        <Loader text="Loading products..." />
       </section>
     )
   }

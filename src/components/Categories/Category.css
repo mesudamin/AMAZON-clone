@@ -67,6 +67,34 @@
   overflow: hidden;
   margin-bottom: 12px;
   background-color: #ffffff;
+  position: relative;
+}
+
+.category__card--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category__imagePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.category__cardImage--hidden {
+  display: none;
+}
+
+.category__cardImage--loaded {
+  animation: categoryImgFadeIn 0.25s ease-in;
+}
+
+@keyframes categoryImgFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Category Image */

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import ProductCard from '../../components/Product/ProductCard'
+import Loader from '../../components/Loader/Loader'
 import './Results.css'
 
 /**
@@ -162,8 +163,7 @@ function Results() {
         <main className="results__main">
           {loading ? (
             <div className="results__loading">
-              <div className="results__spinner"></div>
-              <p>Searching Amazon...</p>
+              <Loader text="Searching Amazon..." />
             </div>
           ) : error ? (
             <div className="results__error">
