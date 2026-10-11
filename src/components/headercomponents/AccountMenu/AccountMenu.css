@@ -31,6 +31,9 @@
   cursor: pointer;
   padding: 7px 0;
   transition: background 0.15s ease;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
 }
 
 .header__accountSignInBtn:hover {

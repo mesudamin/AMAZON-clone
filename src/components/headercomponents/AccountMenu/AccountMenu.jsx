@@ -1,12 +1,26 @@
+import { Link } from 'react-router-dom'
+import { useData } from '../../../utility/DataContext'
+import { Type } from '../../../utility/action.type'
 import './AccountMenu.css'
 
 /**
  * Sign In & Account & Lists Navigation Component with Flyout
  */
-function AccountMenu({ userName = 'Hello, sign in' }) {
+function AccountMenu({ user }) {
+  const [, dispatch] = useData()
+
+  const handleSignOut = () => {
+    dispatch({
+      type: Type.SET_USER,
+      user: null
+    })
+  }
+
+  const displayName = user ? `Hello, ${user.name}` : 'Hello, sign in'
+
   return (
     <div className="header__item header__navText header__hasDropdown" tabIndex={0}>
-      <span className="header__textLineOne">{userName}</span>
+      <span className="header__textLineOne">{displayName}</span>
       <span className="header__textLineTwo">
         Account &amp; Lists <span className="header__arrowDown"></span>
       </span>
@@ -15,10 +29,28 @@ function AccountMenu({ userName = 'Hello, sign in' }) {
       <div className="header__dropdownMenu header__accountDropdown">
         <div className="header__dropdownArrow"></div>
         <div className="header__accountPrompt">
-          <button className="header__accountSignInBtn">Sign in</button>
-          <div className="header__accountNewCustomer">
-            New customer? <a href="#start-here" className="header__linkSmall">Start here.</a>
-          </div>
+          {user ? (
+            <button
+              type="button"
+              className="header__accountSignInBtn"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </button>
+          ) : (
+            <Link to="/auth" className="header__accountSignInBtn header__accountSignInLink">
+              Sign in
+            </Link>
+          )}
+
+          {!user && (
+            <div className="header__accountNewCustomer">
+              New customer?{' '}
+              <Link to="/auth?mode=register" className="header__linkSmall">
+                Start here.
+              </Link>
+            </div>
+          )}
         </div>
         <div className="header__dropdownDivider"></div>
         <div className="header__accountColumns">
@@ -26,9 +58,9 @@ function AccountMenu({ userName = 'Hello, sign in' }) {
           <div className="header__accountColumn">
             <h4 className="header__accountColTitle">Your Lists</h4>
             <ul className="header__accountList">
-              <li><a href="#create-list">Create a List</a></li>
-              <li><a href="#find-list">Find a List or Registry</a></li>
-              <li><a href="#smile">AmazonSmile Charity Lists</a></li>
+              <li><Link to="/cart">Shopping List</Link></li>
+              <li><a href="#wishlist">Wish List</a></li>
+              <li><a href="#registry">Baby Registry</a></li>
             </ul>
           </div>
 
@@ -38,17 +70,12 @@ function AccountMenu({ userName = 'Hello, sign in' }) {
           <div className="header__accountColumn">
             <h4 className="header__accountColTitle">Your Account</h4>
             <ul className="header__accountList">
-              <li><a href="#account">Account</a></li>
-              <li><a href="#orders">Orders</a></li>
+              <li><Link to={user ? "/orders" : "/auth"}>Your Account</Link></li>
+              <li><Link to="/orders">Your Orders</Link></li>
+              <li><Link to="/cart">Your Cart</Link></li>
               <li><a href="#recommendations">Recommendations</a></li>
-              <li><a href="#history">Browsing History</a></li>
-              <li><a href="#watchlist">Watchlist</a></li>
-              <li><a href="#purchases">Video Purchases &amp; Rentals</a></li>
-              <li><a href="#kindle">Kindle Unlimited</a></li>
-              <li><a href="#content">Content &amp; Devices</a></li>
-              <li><a href="#subscribe">Subscribe &amp; Save Items</a></li>
-              <li><a href="#memberships">Memberships &amp; Subscriptions</a></li>
-              <li><a href="#music">Music Library</a></li>
+              <li><a href="#browsing-history">Browsing History</a></li>
+              <li><a href="#prime">Prime Membership</a></li>
             </ul>
           </div>
         </div>

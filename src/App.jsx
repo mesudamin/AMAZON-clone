@@ -1,17 +1,19 @@
-import Header from './components/headercomponents/Header/Header'
-import CarouselEffect from './components/Carousel/CarouselEffect'
-import Category from './components/Categories/Category'
-import Product from './components/Product/Product'
+import AppRouter from './Router'
+import DataProvider from './components/DataProvider/DataProvider'
+import { reducer, initialState } from './utility/reducer'
 import './App.css'
 
+/**
+ * Root Application Component
+ * Provides global state (Cart, User, Orders) and loads application routing
+ */
 function App() {
   return (
-    <div className="app">
-      <Header />
-      <CarouselEffect />
-      <Category />
-      <Product />
-    </div>
+    <DataProvider reducer={reducer} initialState={initialState}>
+      <div className="app">
+        <AppRouter />
+      </div>
+    </DataProvider>
   )
 }
 

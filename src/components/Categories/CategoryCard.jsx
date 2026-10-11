@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Category.css'
 
 /**
@@ -19,7 +20,7 @@ function CategoryCard({ data }) {
 
   return (
     <div className="category__card">
-      <a href={`#category-${data?.category}`} className="category__cardLink">
+      <Link to={`/category/${data?.category}`} className="category__cardLink">
         <h2 className="category__cardTitle">{categoryName}</h2>
         <div className="category__imageContainer">
           <img
@@ -29,7 +30,7 @@ function CategoryCard({ data }) {
           />
         </div>
         <p className="category__shopNow">Shop now</p>
-      </a>
+      </Link>
     </div>
   )
 }

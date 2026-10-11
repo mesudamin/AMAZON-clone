@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './SearchBar.css'
 import searchIcon from '../../../assets/icon/search.svg'
 
@@ -7,6 +8,7 @@ import searchIcon from '../../../assets/icon/search.svg'
  * Includes category selector, suggestions, clear button, and submit button
  */
 function SearchBar({ onSearch }) {
+  const navigate = useNavigate()
   const [searchCategory, setSearchCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
@@ -35,10 +37,17 @@ function SearchBar({ onSearch }) {
     if (searchQuery.trim()) {
       if (onSearch) {
         onSearch({ query: searchQuery, category: searchCategory })
-      } else {
-        console.log(`Searching for "${searchQuery}" in category "${searchCategory}"`)
       }
+      navigate(`/results?search=${encodeURIComponent(searchQuery.trim())}`)
+    } else if (searchCategory !== 'all') {
+      navigate(`/category/${encodeURIComponent(searchCategory)}`)
     }
+  }
+
+  const handleSelectSuggestion = (item) => {
+    setSearchQuery(item)
+    setIsSearchFocused(false)
+    navigate(`/results?search=${encodeURIComponent(item)}`)
   }
 
   return (
@@ -56,23 +65,10 @@ function SearchBar({ onSearch }) {
           aria-label="Select search category"
         >
           <option value="all">All</option>
-          <option value="arts">Arts &amp; Crafts</option>
-          <option value="automotive">Automotive</option>
-          <option value="baby">Baby</option>
-          <option value="beauty">Beauty &amp; Personal Care</option>
-          <option value="books">Books</option>
-          <option value="computers">Computers</option>
-          <option value="digital-music">Digital Music</option>
           <option value="electronics">Electronics</option>
-          <option value="fashion">Men's &amp; Women's Fashion</option>
-          <option value="health">Health &amp; Household</option>
-          <option value="home">Home &amp; Kitchen</option>
-          <option value="movies">Movies &amp; TV</option>
-          <option value="pet-supplies">Pet Supplies</option>
-          <option value="sports">Sports &amp; Outdoors</option>
-          <option value="tools">Tools &amp; Home Improvement</option>
-          <option value="toys">Toys &amp; Games</option>
-          <option value="video-games">Video Games</option>
+          <option value="jewelery">Jewelry</option>
+          <option value="men's clothing">Men's Fashion</option>
+          <option value="women's clothing">Women's Fashion</option>
         </select>
       </div>
 
@@ -110,10 +106,7 @@ function SearchBar({ onSearch }) {
               <div
                 key={index}
                 className="header__suggestionItem"
-                onMouseDown={() => {
-                  setSearchQuery(item)
-                  setIsSearchFocused(false)
-                }}
+                onMouseDown={() => handleSelectSuggestion(item)}
               >
                 <img src={searchIcon} alt="" className="header__suggestionIcon" />
                 <span className="header__suggestionText">{item}</span>

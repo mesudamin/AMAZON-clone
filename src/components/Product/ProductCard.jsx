@@ -1,26 +1,57 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useData } from '../../utility/DataContext'
+import { Type } from '../../utility/action.type'
 import './Product.css'
 
 /**
  * ProductCard Component
  * Displays an individual product with image, title, rating, price, and Add to Cart button
+ * Connects directly to global Cart state
  */
 function ProductCard({ product, data }) {
   const item = product || data || {}
   const { id, title, image, price, rating } = item
+  const [, dispatch] = useData()
+  const [isAdded, setIsAdded] = useState(false)
 
   const rate = Math.round(rating?.rate || 0)
   const count = rating?.count || 0
 
+  const handleAddToCart = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    dispatch({
+      type: Type.ADD_TO_BASKET,
+      item: {
+        id,
+        title,
+        image,
+        price,
+        rating,
+        quantity: 1
+      }
+    })
+
+    setIsAdded(true)
+    setTimeout(() => setIsAdded(false), 1200)
+  }
+
   return (
     <div className="productCard" id={`product-${id}`}>
-      <div className="productCard__imageContainer">
-        <img src={image} alt={title} className="productCard__image" loading="lazy" />
-      </div>
+      <Link to={`/products/${id}`} className="productCard__imageLink">
+        <div className="productCard__imageContainer">
+          <img src={image} alt={title} className="productCard__image" loading="lazy" />
+        </div>
+      </Link>
 
       <div className="productCard__info">
-        <h3 className="productCard__title" title={title}>
-          {title}
-        </h3>
+        <Link to={`/products/${id}`} className="productCard__titleLink">
+          <h3 className="productCard__title" title={title}>
+            {title}
+          </h3>
+        </Link>
 
         <div className="productCard__rating">
           <div className="productCard__stars" aria-label={`${rating?.rate || 0} out of 5 stars`}>
@@ -45,10 +76,11 @@ function ProductCard({ product, data }) {
 
         <button
           type="button"
-          className="productCard__button"
+          className={`productCard__button ${isAdded ? 'productCard__button--added' : ''}`}
+          onClick={handleAddToCart}
           aria-label={`Add ${title} to cart`}
         >
-          Add to Cart
+          {isAdded ? '✓ Added' : 'Add to Cart'}
         </button>
       </div>
     </div>

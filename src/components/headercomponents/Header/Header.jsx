@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import './Header.css'
 
 // Sub-components
@@ -9,6 +10,7 @@ import AccountMenu from '../AccountMenu/AccountMenu'
 import SubNav from '../SubNav/SubNav'
 import SideMenu from '../SideMenu/SideMenu'
 import LocationModal from '../LocationModal/LocationModal'
+import { useData } from '../../../utility/DataContext'
 
 // Icons & Logo
 import amazonLogo from '../../../assets/icon/logo1.png'
@@ -20,7 +22,9 @@ import menuIcon from '../../../assets/icon/menu.svg'
  * Assembles navigation, search, accounts, and drawers into a cohesive header experience
  */
 function Header() {
-  const [cartCount] = useState(0)
+  const [{ basket, user }] = useData()
+  const cartCount = basket?.reduce((amount, item) => item.quantity + amount, 0) || 0
+
   const [sideMenuOpen, setSideMenuOpen] = useState(false)
   const [locationModalOpen, setLocationModalOpen] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState('Ethiopia')
@@ -42,13 +46,13 @@ function Header() {
           </button>
 
           {/* Amazon Logo */}
-          <a href="/" className="header__item header__logoLink" aria-label="Amazon Home">
+          <Link to="/" className="header__item header__logoLink" aria-label="Amazon Home">
             <img
               src={amazonLogo}
               alt="Amazon"
               className="header__logo"
             />
-          </a>
+          </Link>
 
           {/* Deliver to Location (Desktop) */}
           <DeliveryLocation
@@ -66,17 +70,17 @@ function Header() {
           />
 
           {/* Sign In & Account & Lists */}
-          <AccountMenu />
+          <AccountMenu user={user} />
 
           {/* Returns & Orders */}
-          <a href="#orders" className="header__item header__navText">
+          <Link to="/orders" className="header__item header__navText">
             <span className="header__textLineOne">Returns</span>
             <span className="header__textLineTwo">&amp; Orders</span>
-          </a>
+          </Link>
 
           {/* Shopping Cart */}
-          <a
-            href="#cart"
+          <Link
+            to="/cart"
             className="header__item header__cart"
             aria-label={`Shopping Cart with ${cartCount} items`}
           >
@@ -89,7 +93,7 @@ function Header() {
               />
             </div>
             <span className="header__cartTitle">Cart</span>
-          </a>
+          </Link>
         </div>
 
         {/* Mobile Delivery Location Strip */}

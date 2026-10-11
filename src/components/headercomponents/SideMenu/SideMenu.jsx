@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import { useData } from '../../../utility/DataContext'
 import './SideMenu.css'
 
 /**
@@ -5,6 +7,8 @@ import './SideMenu.css'
  * Comprehensive slide-in navigation drawer with departments, features, and settings
  */
 function SideMenu({ isOpen, onClose }) {
+  const [{ user }] = useData()
+
   if (!isOpen) return null
 
   return (
@@ -23,7 +27,9 @@ function SideMenu({ isOpen, onClose }) {
               <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
             </svg>
           </div>
-          <span className="header__sideTitle">Hello, sign in</span>
+          <span className="header__sideTitle">
+            {user ? `Hello, ${user.name}` : 'Hello, sign in'}
+          </span>
           <button
             type="button"
             className="header__sideCloseInside"
@@ -39,18 +45,18 @@ function SideMenu({ isOpen, onClose }) {
           {/* Section 1: Digital Content & Devices */}
           <div className="header__sideSection">
             <h3 className="header__sideSectionTitle">Digital Content &amp; Devices</h3>
-            <a href="#music" className="header__sideItem">
+            <Link to="/results?search=music" className="header__sideItem" onClick={onClose}>
               <span>Amazon Music</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#kindle" className="header__sideItem">
+            </Link>
+            <Link to="/results?search=kindle" className="header__sideItem" onClick={onClose}>
               <span>Kindle E-readers &amp; Books</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#appstore" className="header__sideItem">
+            </Link>
+            <Link to="/results?search=apps" className="header__sideItem" onClick={onClose}>
               <span>Amazon Appstore</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
+            </Link>
           </div>
 
           <div className="header__sideDivider"></div>
@@ -58,42 +64,22 @@ function SideMenu({ isOpen, onClose }) {
           {/* Section 2: Shop by Department */}
           <div className="header__sideSection">
             <h3 className="header__sideSectionTitle">Shop by Department</h3>
-            <a href="#electronics" className="header__sideItem">
+            <Link to="/category/electronics" className="header__sideItem" onClick={onClose}>
               <span>Electronics</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#computers" className="header__sideItem">
-              <span>Computers</span>
+            </Link>
+            <Link to="/category/jewelery" className="header__sideItem" onClick={onClose}>
+              <span>Jewelry</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#smart-home" className="header__sideItem">
-              <span>Smart Home</span>
-              <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#arts" className="header__sideItem">
-              <span>Arts &amp; Crafts</span>
-              <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#automotive" className="header__sideItem">
-              <span>Automotive</span>
-              <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#baby" className="header__sideItem">
-              <span>Baby</span>
-              <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#beauty" className="header__sideItem">
-              <span>Beauty and personal care</span>
-              <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#fashion" className="header__sideItem">
-              <span>Women's Fashion</span>
-              <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#men" className="header__sideItem">
+            </Link>
+            <Link to="/category/men's clothing" className="header__sideItem" onClick={onClose}>
               <span>Men's Fashion</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
+            </Link>
+            <Link to="/category/women's clothing" className="header__sideItem" onClick={onClose}>
+              <span>Women's Fashion</span>
+              <span className="header__sideArrow">&rsaquo;</span>
+            </Link>
           </div>
 
           <div className="header__sideDivider"></div>
@@ -101,18 +87,14 @@ function SideMenu({ isOpen, onClose }) {
           {/* Section 3: Programs & Features */}
           <div className="header__sideSection">
             <h3 className="header__sideSectionTitle">Programs &amp; Features</h3>
-            <a href="#giftcards" className="header__sideItem">
-              <span>Gift Cards</span>
+            <Link to="/cart" className="header__sideItem" onClick={onClose}>
+              <span>Shopping Cart</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#shop-interest" className="header__sideItem">
-              <span>Shop By Interest</span>
+            </Link>
+            <Link to="/orders" className="header__sideItem" onClick={onClose}>
+              <span>Your Orders</span>
               <span className="header__sideArrow">&rsaquo;</span>
-            </a>
-            <a href="#live" className="header__sideItem">
-              <span>Amazon Live</span>
-              <span className="header__sideArrow">&rsaquo;</span>
-            </a>
+            </Link>
           </div>
 
           <div className="header__sideDivider"></div>
@@ -120,11 +102,17 @@ function SideMenu({ isOpen, onClose }) {
           {/* Section 4: Help & Settings */}
           <div className="header__sideSection">
             <h3 className="header__sideSectionTitle">Help &amp; Settings</h3>
-            <a href="#account" className="header__sideItem">Your Account</a>
-            <a href="#english" className="header__sideItem">English</a>
-            <a href="#united-states" className="header__sideItem">United States</a>
-            <a href="#customer-service" className="header__sideItem">Customer Service</a>
-            <a href="#signin" className="header__sideItem">Sign In</a>
+            <Link to={user ? "/orders" : "/auth"} className="header__sideItem" onClick={onClose}>
+              Your Account
+            </Link>
+            <Link to="/orders" className="header__sideItem" onClick={onClose}>
+              Customer Service
+            </Link>
+            {!user ? (
+              <Link to="/auth" className="header__sideItem" onClick={onClose}>
+                Sign In
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>
