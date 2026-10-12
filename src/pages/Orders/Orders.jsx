@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useData } from '../../utility/DataContext'
 import { Type } from '../../utility/action.type'
 import './Orders.css'
@@ -10,6 +10,19 @@ import './Orders.css'
  */
 function Orders() {
   const [{ orders, user }, dispatch] = useData()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth', {
+        state: {
+          msg: 'You must sign in to view your orders.',
+          redirect: '/orders'
+        },
+        replace: true
+      })
+    }
+  }, [user, navigate])
   const [activeTab, setActiveTab] = useState('orders')
   const [searchQuery, setSearchQuery] = useState('')
   const [timeFilter, setTimeFilter] = useState('past3Months')

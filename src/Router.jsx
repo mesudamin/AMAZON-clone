@@ -12,6 +12,8 @@ import ProductDetail from './pages/ProductDetail/ProductDetail'
 import Results from './pages/Results/Results'
 import NotFound from './pages/NotFound/NotFound'
 
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+
 /**
  * Utility to smoothly reset scroll position on route change
  */
@@ -35,7 +37,17 @@ function AppRouter() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Landing />} />
           <Route path="cart" element={<Cart />} />
-          <Route path="orders" element={<Orders />} />
+          <Route
+            path="orders"
+            element={
+              <ProtectedRoute
+                msg="You must sign in to view your orders."
+                redirect="/orders"
+              >
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
           <Route path="category/:categoryName" element={<Results />} />
           <Route path="results" element={<Results />} />
           <Route path="products/:productId" element={<ProductDetail />} />
@@ -43,7 +55,17 @@ function AppRouter() {
         </Route>
 
         {/* Dedicated Amazon Checkout Flow */}
-        <Route path="/payment" element={<Payment />} />
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute
+              msg="You must sign in to proceed to checkout and payment."
+              redirect="/payment"
+            >
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Dedicated Amazon Authentication Flow */}
         <Route path="/auth" element={<Auth />} />

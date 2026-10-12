@@ -32,6 +32,29 @@
   margin-bottom: 18px;
 }
 
+.auth__notice {
+  background-color: #fff8e7;
+  border: 1px solid #e77600;
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #0f1111;
+  line-height: 1.4;
+}
+
+.auth__noticeIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.auth__noticeText {
+  font-weight: 500;
+}
+
 .auth__error {
   background-color: #fffaf0;
   border: 1px solid #c40000;

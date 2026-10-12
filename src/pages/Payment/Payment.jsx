@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useData } from '../../utility/DataContext'
 import { Type } from '../../utility/action.type'
@@ -12,8 +12,20 @@ function Payment() {
   const [{ basket, user }, dispatch] = useData()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth', {
+        state: {
+          msg: 'You must sign in to proceed to checkout and payment.',
+          redirect: '/payment'
+        },
+        replace: true
+      })
+    }
+  }, [user, navigate])
+
   const [deliveryAddress, setDeliveryAddress] = useState({
-    name: user?.name || 'Mesud Amin',
+    name: user?.name || user?.email || 'Customer',
     street: 'Bole Road, House 402',
     city: 'Addis Ababa',
     postalCode: '1000',
@@ -23,10 +35,23 @@ function Payment() {
 
   const [cardData, setCardData] = useState({
     cardNumber: '•••• •••• •••• 4242',
-    cardName: user?.name || 'Mesud Amin',
+    cardName: user?.name || user?.email || 'Customer',
     expiry: '12/28',
     cvv: '123'
   })
+
+  useEffect(() => {
+    if (user?.name || user?.email) {
+      setDeliveryAddress((prev) => ({
+        ...prev,
+        name: user.name || user.email
+      }))
+      setCardData((prev) => ({
+        ...prev,
+        cardName: user.name || user.email
+      }))
+    }
+  }, [user])
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')

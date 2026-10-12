@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useData } from '../../utility/DataContext'
 import { Type } from '../../utility/action.type'
 import amazonLogo from '../../assets/icon/logo1.png'
@@ -11,7 +11,12 @@ import './Auth.css'
 function Auth() {
   const [, dispatch] = useData()
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams] = useSearchParams()
+
+  const navState = location.state || {}
+  const noticeMessage = navState?.msg || searchParams.get('msg') || ''
+  const redirectPath = navState?.redirect || searchParams.get('redirect') || '/'
 
   const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'register')
   const [name, setName] = useState('')
@@ -49,7 +54,7 @@ function Auth() {
       })
 
       setIsLoading(false)
-      navigate('/')
+      navigate(redirectPath, { replace: true })
     }, 600)
   }
 
@@ -65,6 +70,13 @@ function Auth() {
       {/* Main Authentication Box */}
       <div className="auth__box">
         <h1 className="auth__title">{isSignUp ? 'Create account' : 'Sign in'}</h1>
+
+        {noticeMessage && (
+          <div className="auth__notice" role="status">
+            <span className="auth__noticeIcon">⚠️</span>
+            <div className="auth__noticeText">{noticeMessage}</div>
+          </div>
+        )}
 
         {error && (
           <div className="auth__error" role="alert">

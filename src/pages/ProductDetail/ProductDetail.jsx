@@ -11,7 +11,7 @@ import './ProductDetail.css'
  */
 function ProductDetail() {
   const { productId } = useParams()
-  const [, dispatch] = useData()
+  const [{ user }, dispatch] = useData()
   const navigate = useNavigate()
 
   const [product, setProduct] = useState(null)
@@ -86,7 +86,16 @@ function ProductDetail() {
         quantity: Number(quantity)
       }
     })
-    navigate('/payment')
+    if (!user) {
+      navigate('/auth', {
+        state: {
+          msg: 'Please sign in or create an account to complete your purchase.',
+          redirect: '/payment'
+        }
+      })
+    } else {
+      navigate('/payment')
+    }
   }
 
   if (loading) {

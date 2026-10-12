@@ -39,7 +39,16 @@ function Cart() {
 
   const handleProceedToCheckout = () => {
     if (basket.length > 0) {
-      navigate('/payment')
+      if (!user) {
+        navigate('/auth', {
+          state: {
+            msg: 'Please sign in or create an account to proceed to checkout and place your order.',
+            redirect: '/payment'
+          }
+        })
+      } else {
+        navigate('/payment')
+      }
     }
   }
 
@@ -210,7 +219,7 @@ function Cart() {
                 className="cart__checkoutBtn"
                 onClick={handleProceedToCheckout}
               >
-                Proceed to checkout
+                {user ? 'Proceed to checkout' : 'Sign in to proceed to checkout'}
               </button>
             </div>
           </aside>
