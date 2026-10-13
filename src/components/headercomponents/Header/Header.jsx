@@ -23,7 +23,7 @@ import menuIcon from '../../../assets/icon/menu.svg'
  */
 function Header() {
   const [{ basket, user }] = useData()
-  const cartCount = basket?.reduce((amount, item) => item.quantity + amount, 0) || 0
+  const cartCount = basket?.length || 0
 
   const [sideMenuOpen, setSideMenuOpen] = useState(false)
   const [locationModalOpen, setLocationModalOpen] = useState(false)

@@ -19,43 +19,21 @@ const saveStorage = (key, value) => {
   }
 }
 
-// Sample orders to showcase rich order history when user first opens the page
-const sampleOrders = [
-  {
-    id: '114-8392104-5829301',
-    created: new Date(Date.now() - 86400000 * 2).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    }),
-    amount: 173.95,
-    status: 'Delivered',
-    deliveryDate: 'Delivered 2 days ago',
-    recipient: 'Mesud Amin',
-    address: 'Bole Sub-City, Addis Ababa, Ethiopia',
-    items: [
-      {
-        id: 1,
-        title: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops',
-        price: 109.95,
-        image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png',
-        quantity: 1
-      },
-      {
-        id: 9,
-        title: 'WD 2TB Elements Portable External Hard Drive - USB 3.0',
-        price: 64.0,
-        image: 'https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_t.png',
-        quantity: 1
-      }
-    ]
+// Helper to safely load orders from localStorage, filtering out any old mock orders
+const loadOrders = () => {
+  const loaded = loadStorage('amazon_orders', [])
+  if (!Array.isArray(loaded)) return []
+  const cleanOrders = loaded.filter((order) => order && order.id !== '114-8392104-5829301')
+  if (cleanOrders.length !== loaded.length) {
+    saveStorage('amazon_orders', cleanOrders)
   }
-]
+  return cleanOrders
+}
 
 export const initialState = {
   basket: loadStorage('amazon_basket', []),
   user: loadStorage('amazon_user', null),
-  orders: loadStorage('amazon_orders', sampleOrders)
+  orders: loadOrders()
 }
 
 export const reducer = (state, action) => {

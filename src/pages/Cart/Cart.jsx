@@ -12,7 +12,7 @@ function Cart() {
   const [{ basket, user }, dispatch] = useData()
   const navigate = useNavigate()
 
-  const totalItems = basket?.reduce((amount, item) => item.quantity + amount, 0) || 0
+  const totalItems = basket?.length || 0
   const totalPrice =
     basket?.reduce((amount, item) => item.price * item.quantity + amount, 0) || 0
 

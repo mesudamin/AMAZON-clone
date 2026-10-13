@@ -45,7 +45,7 @@ function Payment() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const totalItems = basket?.reduce((amount, item) => item.quantity + amount, 0) || 0
+  const totalItems = basket?.length || 0
   const itemsPrice =
     basket?.reduce((amount, item) => item.price * item.quantity + amount, 0) || 0
   const shippingFee = 0.0
