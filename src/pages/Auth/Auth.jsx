@@ -1,5 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile
+} from 'firebase/auth'
+import { auth } from '../../utility/firebase'
 import { useData } from '../../utility/DataContext'
 import { Type } from '../../utility/action.type'
 import amazonLogo from '../../assets/icon/logo1.png'
@@ -25,37 +31,122 @@ function Auth() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!email.trim() || !password.trim()) {
+    const trimmedEmail = email.trim()
+    const trimmedPassword = password.trim()
+    const trimmedName = name.trim()
+
+    if (!trimmedEmail || !trimmedPassword) {
       setError('Please provide an email and password.')
       return
     }
 
-    if (isSignUp && !name.trim()) {
+    if (isSignUp && !trimmedName) {
       setError('Please enter your name.')
+      return
+    }
+
+    if (!auth?.app?.options?.apiKey) {
+      setError('Firebase credentials are not configured yet. Please paste your Firebase project credentials into the .env file.')
       return
     }
 
     setIsLoading(true)
     setError('')
 
-    setTimeout(() => {
-      const displayName = name.trim() || email.split('@')[0]
-      const newUser = {
-        name: displayName,
-        email: email.trim()
+    try {
+      if (isSignUp) {
+        // Firebase Sign Up
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          trimmedEmail,
+          trimmedPassword
+        )
+
+        if (trimmedName) {
+          try {
+            await updateProfile(userCredential.user, {
+              displayName: trimmedName
+            })
+          } catch (profileErr) {
+            console.warn('Could not update profile displayName:', profileErr)
+          }
+        }
+
+        const authenticatedUser = {
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+          displayName: trimmedName || userCredential.user.displayName || trimmedEmail.split('@')[0],
+          name: trimmedName || userCredential.user.displayName || trimmedEmail.split('@')[0]
+        }
+
+        dispatch({
+          type: Type.SET_USER,
+          user: authenticatedUser
+        })
+
+        setIsLoading(false)
+        navigate(redirectPath, { replace: true })
+      } else {
+        // Firebase Sign In
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          trimmedEmail,
+          trimmedPassword
+        )
+
+        const displayName =
+          userCredential.user.displayName ||
+          userCredential.user.email?.split('@')[0] ||
+          'Customer'
+
+        const authenticatedUser = {
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+          displayName,
+          name: displayName
+        }
+
+        dispatch({
+          type: Type.SET_USER,
+          user: authenticatedUser
+        })
+
+        setIsLoading(false)
+        navigate(redirectPath, { replace: true })
       }
-
-      dispatch({
-        type: Type.SET_USER,
-        user: newUser
-      })
-
+    } catch (err) {
       setIsLoading(false)
-      navigate(redirectPath, { replace: true })
-    }, 600)
+      console.error('Firebase Auth error:', err)
+      const errorCode = err.code || ''
+
+      if (
+        errorCode === 'auth/user-not-found' ||
+        errorCode === 'auth/wrong-password' ||
+        errorCode === 'auth/invalid-credential'
+      ) {
+        setError('Invalid email or password. Please verify your credentials and try again.')
+      } else if (errorCode === 'auth/email-already-in-use') {
+        setError('An account with this email already exists. Please sign in or use a different email.')
+      } else if (errorCode === 'auth/weak-password') {
+        setError('Password should be at least 6 characters.')
+      } else if (errorCode === 'auth/invalid-email') {
+        setError('The email address entered is not valid.')
+      } else if (errorCode === 'auth/too-many-requests') {
+        setError('Access to this account has been temporarily disabled due to many failed login attempts. Try again later.')
+      } else if (errorCode === 'auth/network-request-failed') {
+        setError('Network error. Please check your internet connection.')
+      } else if (errorCode === 'auth/api-key-not-valid' || errorCode === 'auth/invalid-api-key') {
+        setError('Firebase API Key is missing or invalid. Please configure your Firebase credentials in .env.')
+      } else {
+        const cleanMsg = err.message
+          ? err.message.replace(/^Firebase:\s*(Error\s*)?(\(auth\/[^)]+\)\.?)?/i, '').trim() || err.message
+          : 'Authentication failed. Please try again.'
+        setError(cleanMsg)
+      }
+    }
   }
 
   return (

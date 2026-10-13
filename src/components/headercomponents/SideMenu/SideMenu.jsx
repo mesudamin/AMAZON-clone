@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { signOut } from 'firebase/auth'
+import { auth } from '../../../utility/firebase'
 import { useData } from '../../../utility/DataContext'
 import './SideMenu.css'
 
@@ -10,6 +12,15 @@ function SideMenu({ isOpen, onClose }) {
   const [{ user }] = useData()
 
   if (!isOpen) return null
+
+  const handleSignOut = () => {
+    signOut(auth).catch((err) => console.error('Sign Out error:', err))
+    onClose()
+  }
+
+  const displayName = user
+    ? `Hello, ${user.displayName || user.name || user.email?.split('@')[0]}`
+    : 'Hello, sign in'
 
   return (
     <div className="header__sideOverlay" onClick={onClose}>
@@ -28,7 +39,7 @@ function SideMenu({ isOpen, onClose }) {
             </svg>
           </div>
           <span className="header__sideTitle">
-            {user ? `Hello, ${user.name}` : 'Hello, sign in'}
+            {displayName}
           </span>
           <button
             type="button"
@@ -108,11 +119,19 @@ function SideMenu({ isOpen, onClose }) {
             <Link to="/orders" className="header__sideItem" onClick={onClose}>
               Customer Service
             </Link>
-            {!user ? (
+            {user ? (
+              <button
+                type="button"
+                className="header__sideItem header__sideSignOutBtn"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </button>
+            ) : (
               <Link to="/auth" className="header__sideItem" onClick={onClose}>
                 Sign In
               </Link>
-            ) : null}
+            )}
           </div>
         </div>
       </div>

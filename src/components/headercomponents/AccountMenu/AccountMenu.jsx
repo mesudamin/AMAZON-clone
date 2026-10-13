@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { signOut } from 'firebase/auth'
+import { auth } from '../../../utility/firebase'
 import { useData } from '../../../utility/DataContext'
 import { Type } from '../../../utility/action.type'
 import './AccountMenu.css'
@@ -10,13 +12,21 @@ function AccountMenu({ user }) {
   const [, dispatch] = useData()
 
   const handleSignOut = () => {
-    dispatch({
-      type: Type.SET_USER,
-      user: null
-    })
+    signOut(auth)
+      .then(() => {
+        dispatch({
+          type: Type.SET_USER,
+          user: null
+        })
+      })
+      .catch((err) => {
+        console.error('Sign Out error:', err)
+      })
   }
 
-  const displayName = user ? `Hello, ${user.name}` : 'Hello, sign in'
+  const displayName = user
+    ? `Hello, ${user.displayName || user.name || user.email?.split('@')[0]}`
+    : 'Hello, sign in'
 
   return (
     <div className="header__item header__navText header__hasDropdown" tabIndex={0}>

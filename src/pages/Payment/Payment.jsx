@@ -24,8 +24,10 @@ function Payment() {
     }
   }, [user, navigate])
 
+  const userIdentifier = user?.displayName || user?.name || user?.email || 'Customer'
+
   const [deliveryAddress, setDeliveryAddress] = useState({
-    name: user?.name || user?.email || 'Customer',
+    name: userIdentifier,
     street: 'Bole Road, House 402',
     city: 'Addis Ababa',
     postalCode: '1000',
@@ -35,23 +37,10 @@ function Payment() {
 
   const [cardData, setCardData] = useState({
     cardNumber: '•••• •••• •••• 4242',
-    cardName: user?.name || user?.email || 'Customer',
+    cardName: userIdentifier,
     expiry: '12/28',
     cvv: '123'
   })
-
-  useEffect(() => {
-    if (user?.name || user?.email) {
-      setDeliveryAddress((prev) => ({
-        ...prev,
-        name: user.name || user.email
-      }))
-      setCardData((prev) => ({
-        ...prev,
-        cardName: user.name || user.email
-      }))
-    }
-  }, [user])
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')

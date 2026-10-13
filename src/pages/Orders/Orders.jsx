@@ -177,7 +177,7 @@ function Orders() {
                     <div className="orders__cardMetaItem">
                       <span className="orders__metaLabel">SHIP TO</span>
                       <span className="orders__metaValueLink">
-                        {order.recipient || user?.name || 'Customer'}
+                        {order.recipient || user?.displayName || user?.name || 'Customer'}
                       </span>
                     </div>
                   </div>
