@@ -178,7 +178,7 @@ function Payment() {
       console.error('Payment Error:', err)
       if (err.code === 'ERR_NETWORK' || !err.response) {
         setErrorMessage(
-          'Cannot connect to the payment server. Please ensure the server is running on http://localhost:5000 (run: "cd server && npm start").'
+          'Cannot connect to the payment server. If the Render free backend was sleeping, it may take 30-50 seconds to spin up. Please try again in a few moments.'
         )
       } else {
         setErrorMessage(

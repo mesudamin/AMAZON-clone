@@ -1,39 +1,9 @@
 import { Type } from './action.type'
 
-// Helper to safely load from localStorage
-const loadStorage = (key, fallback) => {
-  try {
-    const item = localStorage.getItem(key)
-    return item ? JSON.parse(item) : fallback
-  } catch {
-    return fallback
-  }
-}
-
-// Helper to safely save to localStorage
-const saveStorage = (key, value) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(value))
-  } catch (err) {
-    console.error('Failed to save to localStorage:', err)
-  }
-}
-
-// Helper to safely load orders from localStorage, filtering out any old mock orders
-const loadOrders = () => {
-  const loaded = loadStorage('amazon_orders', [])
-  if (!Array.isArray(loaded)) return []
-  const cleanOrders = loaded.filter((order) => order && order.id !== '114-8392104-5829301')
-  if (cleanOrders.length !== loaded.length) {
-    saveStorage('amazon_orders', cleanOrders)
-  }
-  return cleanOrders
-}
-
 export const initialState = {
-  basket: loadStorage('amazon_basket', []),
-  user: loadStorage('amazon_user', null),
-  orders: loadOrders()
+  basket: [],
+  user: null,
+  orders: []
 }
 
 export const reducer = (state, action) => {
@@ -57,7 +27,6 @@ export const reducer = (state, action) => {
         })
       }
 
-      saveStorage('amazon_basket', updatedBasket)
       return {
         ...state,
         basket: updatedBasket
@@ -79,7 +48,6 @@ export const reducer = (state, action) => {
         }
       }
 
-      saveStorage('amazon_basket', updatedBasket)
       return {
         ...state,
         basket: updatedBasket
@@ -87,16 +55,13 @@ export const reducer = (state, action) => {
     }
 
     case Type.REMOVE_FROM_BASKET: {
-      const updatedBasket = state.basket.filter((item) => item.id !== action.id)
-      saveStorage('amazon_basket', updatedBasket)
       return {
         ...state,
-        basket: updatedBasket
+        basket: state.basket.filter((item) => item.id !== action.id)
       }
     }
 
     case Type.EMPTY_BASKET: {
-      saveStorage('amazon_basket', [])
       return {
         ...state,
         basket: []
@@ -104,37 +69,17 @@ export const reducer = (state, action) => {
     }
 
     case Type.SET_USER: {
-      const normalizedUser = action.user
-        ? {
-          uid: action.user.uid,
-          email: action.user.email,
-          displayName: action.user.displayName || action.user.name || action.user.email?.split('@')[0] || 'Customer',
-          name: action.user.displayName || action.user.name || action.user.email?.split('@')[0] || 'Customer'
-        }
-        : null
-      saveStorage('amazon_user', normalizedUser)
       return {
         ...state,
-        user: normalizedUser
+        user: action.user
       }
     }
 
     case Type.PLACE_ORDER: {
-      const updatedOrders = [action.order, ...(state.orders || [])]
-      saveStorage('amazon_orders', updatedOrders)
-      saveStorage('amazon_basket', [])
       return {
         ...state,
-        orders: updatedOrders,
+        orders: [action.order, ...(state.orders || [])],
         basket: []
-      }
-    }
-
-    case Type.CLEAR_ORDERS: {
-      saveStorage('amazon_orders', [])
-      return {
-        ...state,
-        orders: []
       }
     }
 

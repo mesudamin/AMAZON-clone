@@ -19,10 +19,7 @@ import { loadStripe } from '@stripe/stripe-js'
 /**
  * Initialize Stripe with public key from environment variables
  */
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLIC_KEY ||
-    'pk_test_51UQ72rGlb9hC5MtXO6u2hKzEdiWVD5Mqr6OXApnt5ebQu6wWqa84jwR1fA8GKAoxlaxn0eAHkBglwFDKhpSMCV3000VoMom2Pc'
-)
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
 
 /**
  * Utility to smoothly reset scroll position on route change
