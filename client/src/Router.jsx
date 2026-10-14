@@ -13,6 +13,16 @@ import Results from './pages/Results/Results'
 import NotFound from './pages/NotFound/NotFound'
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import { Elements } from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
+
+/**
+ * Initialize Stripe with public key from environment variables
+ */
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLIC_KEY ||
+    'pk_test_51UQ72rGlb9hC5MtXO6u2hKzEdiWVD5Mqr6OXApnt5ebQu6wWqa84jwR1fA8GKAoxlaxn0eAHkBglwFDKhpSMCV3000VoMom2Pc'
+)
 
 /**
  * Utility to smoothly reset scroll position on route change
@@ -62,7 +72,9 @@ function AppRouter() {
               msg="You must sign in to proceed to checkout and payment."
               redirect="/payment"
             >
-              <Payment />
+              <Elements stripe={stripePromise}>
+                <Payment />
+              </Elements>
             </ProtectedRoute>
           }
         />

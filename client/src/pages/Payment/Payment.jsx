@@ -1,17 +1,28 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
+import { ClipLoader } from 'react-spinners'
 import { useData } from '../../utility/DataContext'
 import { Type } from '../../utility/action.type'
+import { axiosInstance } from '../../Api/axios'
+import { db } from '../../utility/firebase'
+import { doc, setDoc } from 'firebase/firestore'
 import './Payment.css'
 
 /**
- * Authentic Amazon Checkout & Payment Page Component
- * Handles delivery address, item review, payment simulation, and order placement
+ * Authentic Amazon Checkout & Stripe Payment Page Component
+ * Handles delivery address, item review, real-time CardElement validation,
+ * backend Stripe PaymentIntent creation, payment confirmation, and order recording.
  */
 function Payment() {
   const [{ basket, user }, dispatch] = useData()
   const navigate = useNavigate()
 
+  // Stripe Hooks
+  const stripe = useStripe()
+  const elements = useElements()
+
+  // Redirect if user is not signed in
   useEffect(() => {
     if (!user) {
       navigate('/auth', {
@@ -35,14 +46,10 @@ function Payment() {
   })
   const [isEditingAddress, setIsEditingAddress] = useState(false)
 
-  const [cardData, setCardData] = useState({
-    cardNumber: '•••• •••• •••• 4242',
-    cardName: userIdentifier,
-    expiry: '12/28',
-    cvv: '123'
-  })
-
+  // Payment States
   const [isProcessing, setIsProcessing] = useState(false)
+  const [cardError, setCardError] = useState('')
+  const [disabled, setDisabled] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
 
   const totalItems = basket?.length || 0
@@ -51,8 +58,20 @@ function Payment() {
   const shippingFee = 0.0
   const orderTotal = itemsPrice + shippingFee
 
-  const handlePlaceOrder = (e) => {
+  // Handle CardElement real-time validation
+  const handleCardChange = (e) => {
+    setDisabled(e.empty || !e.complete)
+    setCardError(e.error ? e.error.message : '')
+  }
+
+  // Handle Stripe Payment Submission
+  const handlePlaceOrder = async (e) => {
     e.preventDefault()
+
+    if (!stripe || !elements) {
+      setErrorMessage('Stripe has not initialized yet. Please wait a moment and try again.')
+      return
+    }
 
     if (basket.length === 0) {
       setErrorMessage('Your cart is empty. Please add items before placing an order.')
@@ -61,38 +80,116 @@ function Payment() {
 
     setIsProcessing(true)
     setErrorMessage('')
+    setCardError('')
 
-    // Simulate payment processing delay
-    setTimeout(() => {
-      const newOrderId = `114-${Math.floor(1000000 + Math.random() * 9000000)}-${Math.floor(
-        1000000 + Math.random() * 9000000
-      )}`
+    try {
+      // 1. Request clientSecret from the Express backend
+      const totalInCents = Math.round(orderTotal * 100)
+      const response = await axiosInstance({
+        method: 'POST',
+        url: `/payment/create?total=${totalInCents}`
+      })
 
-      const placedOrder = {
-        id: newOrderId,
-        created: new Date().toLocaleDateString('en-US', {
+      const clientSecret = response.data?.clientSecret
+
+      if (!clientSecret) {
+        throw new Error('Failed to retrieve payment client secret from server.')
+      }
+
+      // 2. Confirm Card Payment with Stripe
+      const cardElement = elements.getElement(CardElement)
+      const confirmation = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: deliveryAddress.name || userIdentifier,
+            email: user?.email || undefined,
+            address: {
+              line1: deliveryAddress.street,
+              city: deliveryAddress.city,
+              postal_code: deliveryAddress.postalCode,
+              country: 'US'
+            }
+          }
+        }
+      })
+
+      if (confirmation.error) {
+        setCardError(confirmation.error.message || 'Payment confirmation failed.')
+        setIsProcessing(false)
+        return
+      }
+
+      const paymentIntent = confirmation.paymentIntent
+
+      if (paymentIntent.status === 'succeeded') {
+        const newOrderId = paymentIntent.id
+        const orderDate = new Date(paymentIntent.created * 1000).toLocaleDateString('en-US', {
           month: 'long',
           day: 'numeric',
           year: 'numeric'
-        }),
-        amount: orderTotal,
-        status: 'Ordered',
-        deliveryDate: `Arriving in 2 days (${new Date(
-          Date.now() + 86400000 * 2
-        ).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})`,
-        recipient: deliveryAddress.name,
-        address: `${deliveryAddress.street}, ${deliveryAddress.city}, ${deliveryAddress.country}`,
-        items: [...basket]
+        })
+
+        const placedOrder = {
+          id: newOrderId,
+          created: orderDate,
+          amount: paymentIntent.amount / 100,
+          status: 'Paid & Confirmed',
+          deliveryDate: `Arriving in 2 days (${new Date(
+            Date.now() + 86400000 * 2
+          ).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})`,
+          recipient: deliveryAddress.name,
+          address: `${deliveryAddress.street}, ${deliveryAddress.city}, ${deliveryAddress.country}`,
+          items: [...basket]
+        }
+
+        // 3. Optional: Sync order into Firebase Firestore if user UID exists
+        if (user?.uid) {
+          try {
+            await setDoc(doc(db, 'users', user.uid, 'orders', newOrderId), {
+              basket: basket,
+              amount: paymentIntent.amount / 100,
+              created: paymentIntent.created,
+              recipient: deliveryAddress.name,
+              address: placedOrder.address
+            })
+          } catch (firestoreError) {
+            console.warn('Note: Firestore order backup skipped or rules restricted:', firestoreError)
+          }
+        }
+
+        // 4. Record order into local state and clear shopping basket
+        dispatch({
+          type: Type.PLACE_ORDER,
+          order: placedOrder
+        })
+
+        dispatch({
+          type: Type.EMPTY_BASKET
+        })
+
+        setIsProcessing(false)
+        navigate('/orders', { replace: true })
+      } else {
+        setErrorMessage(`Payment status: ${paymentIntent.status}. Please check your card.`)
+        setIsProcessing(false)
       }
-
-      dispatch({
-        type: Type.PLACE_ORDER,
-        order: placedOrder
-      })
-
+    } catch (err) {
+      console.error('Payment Error:', err)
+      if (err.code === 'ERR_NETWORK' || !err.response) {
+        setErrorMessage(
+          'Cannot connect to the payment server. Please ensure the server is running on http://localhost:5000 (run: "cd server && npm start").'
+        )
+      } else {
+        setErrorMessage(
+          err.response?.data?.message ||
+          err.response?.data?.error ||
+          err.message ||
+          'An unexpected error occurred during checkout.'
+        )
+      }
       setIsProcessing(false)
-      navigate('/orders')
-    }, 1200)
+    }
   }
 
   if (basket?.length === 0) {
@@ -125,14 +222,14 @@ function Payment() {
             </Link>
             )
           </h1>
-          <div className="payment__secureIcon">🔒 Secure Checkout</div>
+          <div className="payment__secureIcon">🔒 Secure Stripe Checkout</div>
         </div>
       </div>
 
       <div className="payment__container">
         {errorMessage && (
           <div className="payment__alert" role="alert">
-            {errorMessage}
+            <strong>Payment notice: </strong> {errorMessage}
           </div>
         )}
 
@@ -220,67 +317,58 @@ function Payment() {
             </div>
           </section>
 
-          {/* Step 2: Payment Method */}
+          {/* Step 2: Payment Method (Stripe Elements) */}
           <section className="payment__section">
             <div className="payment__sectionHeader">
               <span className="payment__stepNumber">2</span>
               <h2 className="payment__sectionTitle">Payment method</h2>
             </div>
             <div className="payment__sectionBody">
-              <div className="payment__cardMock">
-                <div className="payment__cardRadio">
-                  <input type="radio" id="cardRadio" name="paymentOption" defaultChecked />
-                  <label htmlFor="cardRadio">
-                    <strong>Credit or Debit Card</strong>
-                    <span className="payment__cardBrand"> (Visa, Mastercard, Amex)</span>
-                  </label>
-                </div>
+              <form onSubmit={handlePlaceOrder} className="payment__stripeForm">
+                <div className="payment__stripeBox">
+                  <div className="payment__cardOptionsHeader">
+                    <div className="payment__cardRadioTitle">
+                      <input type="radio" id="stripeCardRadio" name="paymentOption" defaultChecked readOnly />
+                      <label htmlFor="stripeCardRadio">
+                        <strong>Credit or Debit Card</strong>
+                      </label>
+                    </div>
+                    <div className="payment__cardLogos">
+                      <span>Visa</span> • <span>MC</span> • <span>Amex</span> • <span>Discover</span>
+                    </div>
+                  </div>
 
-                <div className="payment__cardFields">
-                  <div className="payment__formRow">
-                    <label>Card Number</label>
-                    <input
-                      type="text"
-                      value={cardData.cardNumber}
-                      onChange={(e) =>
-                        setCardData({ ...cardData, cardNumber: e.target.value })
-                      }
+                  <div className="payment__cardElementWrapper">
+                    <CardElement
+                      id="card-element"
+                      onChange={handleCardChange}
+                      options={{
+                        style: {
+                          base: {
+                            fontSize: '15px',
+                            color: '#0f1111',
+                            fontFamily: '"Amazon Ember", Arial, sans-serif',
+                            '::placeholder': {
+                              color: '#656565'
+                            }
+                          },
+                          invalid: {
+                            color: '#ba0933',
+                            iconColor: '#ba0933'
+                          }
+                        }
+                      }}
                     />
                   </div>
-                  <div className="payment__formGroup">
-                    <div className="payment__formRow">
-                      <label>Name on card</label>
-                      <input
-                        type="text"
-                        value={cardData.cardName}
-                        onChange={(e) =>
-                          setCardData({ ...cardData, cardName: e.target.value })
-                        }
-                      />
+
+                  {cardError && (
+                    <div className="payment__cardError" role="alert">
+                      <span className="payment__errorIcon">⚠️</span>
+                      <span>{cardError}</span>
                     </div>
-                    <div className="payment__formRow">
-                      <label>Expiration date</label>
-                      <input
-                        type="text"
-                        value={cardData.expiry}
-                        onChange={(e) =>
-                          setCardData({ ...cardData, expiry: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div className="payment__formRow">
-                      <label>CVV</label>
-                      <input
-                        type="text"
-                        value={cardData.cvv}
-                        onChange={(e) =>
-                          setCardData({ ...cardData, cvv: e.target.value })
-                        }
-                      />
-                    </div>
-                  </div>
+                  )}
                 </div>
-              </div>
+              </form>
             </div>
           </section>
 
@@ -324,9 +412,16 @@ function Payment() {
               type="button"
               className="payment__placeOrderBtn"
               onClick={handlePlaceOrder}
-              disabled={isProcessing}
+              disabled={isProcessing || disabled || !stripe || !elements}
             >
-              {isProcessing ? 'Processing Order...' : 'Place your order'}
+              {isProcessing ? (
+                <span className="payment__processingBtn">
+                  <ClipLoader size={16} color="#0f1111" />
+                  <span>Processing Payment...</span>
+                </span>
+              ) : (
+                'Place your order'
+              )}
             </button>
 
             <p className="payment__terms">

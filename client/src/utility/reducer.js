@@ -106,11 +106,11 @@ export const reducer = (state, action) => {
     case Type.SET_USER: {
       const normalizedUser = action.user
         ? {
-            uid: action.user.uid,
-            email: action.user.email,
-            displayName: action.user.displayName || action.user.name || action.user.email?.split('@')[0] || 'Customer',
-            name: action.user.displayName || action.user.name || action.user.email?.split('@')[0] || 'Customer'
-          }
+          uid: action.user.uid,
+          email: action.user.email,
+          displayName: action.user.displayName || action.user.name || action.user.email?.split('@')[0] || 'Customer',
+          name: action.user.displayName || action.user.name || action.user.email?.split('@')[0] || 'Customer'
+        }
         : null
       saveStorage('amazon_user', normalizedUser)
       return {
