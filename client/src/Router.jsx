@@ -16,10 +16,10 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 
-/**
- * Initialize Stripe with public key from environment variables
- */
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLIC_KEY ||
+  'pk_test_51UQ72rGlb9hC5MtXpobMXsuMkpJucycn32gpunWZmaYtS053F3UCNpmw1OvifxFRYfvylURNzyxAUJ1d1PzcNEzO00lkDQhLgX'
+)
 
 /**
  * Utility to smoothly reset scroll position on route change
